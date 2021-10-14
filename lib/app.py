@@ -99,7 +99,7 @@ def scheduler_ontime(output):
         lines = fin.readlines()
 
     for line in lines:
-        t, story, dur, _ = line.split(",")
+        t, story, *rest  = line.split(",")
         tt = parser.parse(t)
         eve = sched.Event(tt.timestamp(), 1, announce, (story, "zero"), {})
         if eve not in event_schedule.queue:
@@ -107,12 +107,18 @@ def scheduler_ontime(output):
                 tt.timestamp(), 1, announce, (story, "zero"))
 
 
+def subprocess_say(msg):
+    startinfo = subprocess.STARTUPINFO()
+    startinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+    iret = subprocess.run(["say", msg],
+                          stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                          startupinfo=startinfo)
+    return iret
+
+
 def announce(task, mins="couple of "):
-    startupinfo = subprocess.STARTUPINFO()
-    startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-    subprocess.run(
-        ["say", "Meeting for {0} in {1} minutes".format(task, mins)],
-        startupinfo=startupinfo)
+    msg = "Meeting titled {0} in {1} minutes".format(task, mins)
+    iret = subprocess_say(msg)
 
 
 def mainrun():
@@ -121,7 +127,6 @@ def mainrun():
     # os.startfile(output)
     scheduler_ontime(output)
     five_min, fifteen_min = process_time(output)
-    seconds = 360
     for task in fifteen_min:
         if task in five_min:
             announce(task)

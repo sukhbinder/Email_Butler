@@ -18,10 +18,10 @@ setup(
     long_description_content_type="text/markdown",
     author="sukhbinder",
     author_email="sukh2010@yahoo.com",
-    url = 'https://github.com/sukhbinder/email_butler',
-    keywords = ["say", "windows", "announce", "outlook", "appointments",],
+    url='https://github.com/sukhbinder/email_butler',
+    keywords=["say", "windows", "announce", "outlook", "appointments", ],
     entry_points={
-        'console_scripts': ['email_butler = email_butler.lib:main', ],
+        'console_scripts': ['ebutler = lib.app:main', ],
     },
     install_requires=["winsay"],
     classifiers=[
